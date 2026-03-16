@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getAppLanguage, setAppLanguage } from "../utils/language";
 
-function StudentProfilePage() {
+function TeacherProfilePage() {
   const [avatarPreview, setAvatarPreview] = useState("");
   const [language, setLanguage] = useState(getAppLanguage());
   const fileInputRef = useRef(null);
@@ -47,7 +47,7 @@ function StudentProfilePage() {
     <div className="lp-page profile-page">
       <div className="sidebar-overlay"></div>
       <aside className="lp-sidebar">
-        <a href="/student/home" className="lp-brand">
+        <a href="/teacher/home" className="lp-brand">
           <span className="logo-mark" />
           <div>
             <strong>BachKhoaViet</strong>
@@ -56,15 +56,15 @@ function StudentProfilePage() {
         </a>
 
         <nav className="lp-nav">
-          <a href="/student/home">Learning Path</a>
-          <a href="/student/course">AI Scanner</a>
-          <a href="/student/exams">Mock Exams</a>
-          <a href="/student/arena">Gamification</a>
-          <a href="/student/leaderboard">Analytics</a>
-          <a href="/student/messages">Messages</a>
+          <a href="/teacher/home">My Classes</a>
+          <a href="/teacher/course">Assignment Manager</a>
+          <a href="/teacher/exams">Quizzes & Tests</a>
+          <a href="/teacher/arena">Class Performance</a>
+          <a href="/teacher/leaderboard">Analytics Dashboard</a>
+          <a href="/teacher/messages">Student Messages</a>
         </nav>
 
-        <a href="/student/profile" className="lp-profile-shortcut active">
+        <a href="/teacher/profile" className="lp-profile-shortcut active">
           ⚙ Profile & Settings
         </a>
 
@@ -91,11 +91,11 @@ function StudentProfilePage() {
             </div>
           </div>
           <div className="lp-actions">
-            <a href="/student/course" className="scanner">
+            <a href="/teacher/course" className="scanner">
               🧠 AI Scanner
             </a>
             <span>🔔</span>
-            <a href="/student/profile" className="lp-user">
+            <a href="/teacher/profile" className="lp-user">
               <div>
                 <strong>Nam Nguyen</strong>
                 <small>Grade 12 - Natural Sciences</small>
@@ -231,7 +231,7 @@ function StudentProfilePage() {
             </button>
             <h3>Nam Nguyen</h3>
             <p>Grade 12 student - Natural Sciences</p>
-            <a href="/student/messages" className="btn btn-muted">
+            <a href="/teacher/messages" className="btn btn-muted">
               Contact teacher
             </a>
           </aside>
@@ -241,4 +241,4 @@ function StudentProfilePage() {
   );
 }
 
-export default StudentProfilePage;
+export default TeacherProfilePage;

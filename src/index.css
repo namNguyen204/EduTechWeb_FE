@@ -686,6 +686,45 @@ select {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.auth-role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: #182431;
+  border: 1px solid #203143;
+  border-radius: 999px;
+  padding: 8px;
+  margin-bottom: 20px;
+}
+
+.auth-role-option {
+  border: 0;
+  border-radius: 999px;
+  height: 48px;
+  background: transparent;
+  color: #c5d3e4;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.auth-role-option:hover {
+  background: rgba(12, 18, 26, 0.5);
+  color: #fff;
+}
+
+.auth-role-option.active {
+  background: #0c121a;
+  color: #1e87f5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-weight: 800;
+}
+
 .social-btn {
   margin-top: 16px;
   width: 100%;

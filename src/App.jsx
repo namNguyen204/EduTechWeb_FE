@@ -9,6 +9,14 @@ import MessagesPage from "./pages/MessagesPage";
 import ExamResultsPage from "./pages/ExamResultsPage";
 import LearningPathPage from "./pages/LearningPathPage";
 import StudentProfilePage from "./pages/StudentProfilePage";
+import TeacherLearningPathPage from "./pages/TeacherLearningPathPage";
+import TeacherCoursePage from "./pages/TeacherCoursePage";
+import TeacherOnboardingPage from "./pages/TeacherOnboardingPage";
+import TeacherArenaPage from "./pages/TeacherArenaPage";
+import TeacherLeaderboardPage from "./pages/TeacherLeaderboardPage";
+import TeacherMessagesPage from "./pages/TeacherMessagesPage";
+import TeacherExamResultsPage from "./pages/TeacherExamResultsPage";
+import TeacherProfilePage from "./pages/TeacherProfilePage";
 import ContentManagerPage from "./pages/ContentManagerPage";
 import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
 
@@ -39,6 +47,19 @@ function App() {
     "/profile": StudentProfilePage,
   };
 
+  const teacherRoutes = {
+    "/teacher": TeacherLearningPathPage,
+    "/teacher/home": TeacherLearningPathPage,
+    "/teacher/learning-path": TeacherLearningPathPage,
+    "/teacher/course": TeacherCoursePage,
+    "/teacher/onboarding": TeacherOnboardingPage,
+    "/teacher/arena": TeacherArenaPage,
+    "/teacher/leaderboard": TeacherLeaderboardPage,
+    "/teacher/messages": TeacherMessagesPage,
+    "/teacher/exams": TeacherExamResultsPage,
+    "/teacher/profile": TeacherProfilePage,
+  };
+
   const nonStudentRoutes = {
     "/login": AuthPage,
     "/auth": AuthPage,
@@ -52,6 +73,12 @@ function App() {
   if (matchedStudentPage) {
     const StudentPage = matchedStudentPage;
     return <StudentPage />;
+  }
+
+  const matchedTeacherPage = teacherRoutes[normalizedPath];
+  if (matchedTeacherPage) {
+    const TeacherPage = matchedTeacherPage;
+    return <TeacherPage />;
   }
 
   const matchedNonStudentPage = nonStudentRoutes[normalizedPath];
