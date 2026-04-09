@@ -1,4 +1,4 @@
-import { PageContainer } from "../../shared/ui/PageContainer";
+import "../../styles/pages/HomePage.scss";
 
 const roleCards = [
   {
@@ -23,24 +23,64 @@ const roleCards = [
 
 export function HomeLandingPage() {
   return (
-    <PageContainer
-      title="EduTech platform"
-      subtitle=""
-    >
-      <div className="grid gap-4 md:grid-cols-3">
+    <main className="home-page container-page">
+      <section className="home-page__hero">
+        <div className="home-page__hero-copy">
+          <span className="pill">
+            ⚡ NEXT-GEN LEARNING PLATFORM
+          </span>
+
+          <h1>
+            Igniting <span>Knowledge</span>
+          </h1>
+
+          <p className="home-page__subtitle">
+            Giao diện dùng SCSS tách lớp theo từng page, kế thừa visual language từ file index.css
+            trước đây để đồng nhất toàn hệ thống.
+          </p>
+
+          <div className="home-page__hero-actions">
+            <a href="/signup" className="btn btn-primary">
+              Get Started
+            </a>
+            <a href="/course" className="btn btn-outline">
+              Explore Courses
+            </a>
+          </div>
+
+          <p className="home-page__trusted">Trusted by 50,000+ students</p>
+        </div>
+
+        <div className="home-page__hero-visual">
+          <div className="badge-top">
+            Grade 12 Math - Integration
+          </div>
+          <div className="mock-card" />
+          <div className="badge-bottom">
+            AI Scanner thông minh
+          </div>
+        </div>
+      </section>
+
+      <section className="home-page__role-grid">
         {roleCards.map((card) => (
-          <article key={card.title} className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-            <h2 className="text-lg font-semibold text-slate-900">{card.title}</h2>
-            <p className="mt-2 text-sm text-slate-600">{card.description}</p>
-            <a
-              href={card.href}
-              className="mt-4 inline-flex rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
-            >
+          <article key={card.title} className="home-page__role-card">
+            <h2>{card.title}</h2>
+            <p>{card.description}</p>
+            <a href={card.href} className="btn btn-dark">
               {card.cta}
             </a>
           </article>
         ))}
-      </div>
-    </PageContainer>
+      </section>
+
+      <section className="home-page__summary">
+        <h2>Transforming K-12 Learning</h2>
+        <p>
+          Tách style theo page giúp dễ maintain: mỗi màn hình có file SCSS riêng nhưng vẫn dùng
+          token/biến chung để giữ trải nghiệm nhất quán.
+        </p>
+      </section>
+    </main>
   );
 }

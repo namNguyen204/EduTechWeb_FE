@@ -1,64 +1,115 @@
 import type { RouteMeta, UserRole } from "../../shared/types/page";
-import { PageContainer } from "../../shared/ui/PageContainer";
+import { getRoleNavigation } from "../../shared/lib/roleNavigation";
+import { resolveWorkspacePreset } from "./workspacePresets";
+import "../../styles/pages/WorkspaceBase.scss";
 
 interface WorkspacePageProps {
   route: RouteMeta;
 }
 
 const roleBadgeClass: Record<UserRole, string> = {
-  public: "bg-slate-100 text-slate-700",
-  student: "bg-blue-100 text-blue-800",
-  teacher: "bg-emerald-100 text-emerald-800",
-  parent: "bg-violet-100 text-violet-800",
-  admin: "bg-amber-100 text-amber-800",
+  public: "workspace-page__role-badge workspace-page__role-badge--public",
+  student: "workspace-page__role-badge workspace-page__role-badge--student",
+  teacher: "workspace-page__role-badge workspace-page__role-badge--teacher",
+  parent: "workspace-page__role-badge workspace-page__role-badge--parent",
+  admin: "workspace-page__role-badge workspace-page__role-badge--admin",
 };
 
 const quickActions = [
   "Review trạng thái hôm nay",
-  "Đồng bộ kế hoạch học tập",
-  "Theo dõi hiệu suất tuần",
-  "Kiểm tra cảnh báo hệ thống",
+  "Đồng bộ lộ trình tuần",
+  "Theo dõi hiệu suất lớp",
+  "Kiểm tra cảnh báo AI",
 ];
 
 export function WorkspacePage({ route }: WorkspacePageProps) {
+  const navigation = getRoleNavigation(route.role);
+  const preset = resolveWorkspacePreset(route.key);
+  const pageClass = `workspace-page workspace-page--${route.key}`;
+
   return (
-    <PageContainer title={route.title} subtitle={route.subtitle}>
-      <div className="grid gap-4 lg:grid-cols-3">
-        <article className="rounded-xl border border-slate-200 p-5 lg:col-span-2">
-          <div className="flex items-center gap-2">
-            <span
-              className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${roleBadgeClass[route.role]}`}
-            >
+    <main className={pageClass}>
+      <aside className="workspace-page__sidebar">
+        <a href="/" className="workspace-page__brand">
+          <span className="workspace-page__brand-mark" />
+          BachKhoaViet
+        </a>
+
+        <div className="workspace-page__nav">
+          {navigation.map((item) => {
+            const isActive = item.href === route.ctaHref;
+
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`workspace-page__nav-link ${
+                  isActive ? "workspace-page__nav-link--active" : ""
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
+        </div>
+
+        <div className="workspace-page__sidebar-card">
+          <p className="workspace-page__sidebar-label">Workspace</p>
+          <p className="workspace-page__sidebar-title">{preset.badge}</p>
+          <p className="workspace-page__sidebar-note">Chuẩn hóa theo SCSS component system</p>
+        </div>
+      </aside>
+
+      <section className="workspace-page__main">
+        <div className="workspace-page__hero-card">
+          <div className="workspace-page__hero-tags">
+            <span className={roleBadgeClass[route.role]}>
               {route.role}
             </span>
-            <span className="text-xs text-slate-500">Key: {route.key}</span>
+            <span className="workspace-page__preset-badge">
+              {preset.badge}
+            </span>
           </div>
 
-          <h2 className="mt-4 text-xl font-semibold text-slate-900">Trang đã được chuẩn hóa theo layer</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Route hiện tại dùng metadata-driven rendering, giúp giảm lặp code giữa các page và dễ
-            bảo trì theo chuẩn senior.
-          </p>
+          <h1>{route.title}</h1>
+          <p>{route.subtitle}</p>
+        </div>
 
-          <a
-            href={route.ctaHref}
-            className="mt-6 inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
-          >
-            {route.ctaLabel}
-          </a>
-        </article>
+        <div className="workspace-page__content-grid">
+          <article className="workspace-page__main-card">
+            <div className="workspace-page__kpi-row">
+              <p>{preset.kpiLabel}</p>
+              <strong>{preset.kpiValue}</strong>
+            </div>
 
-        <aside className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">Quick actions</h3>
-          <ul className="mt-3 space-y-2">
-            {quickActions.map((action) => (
-              <li key={action} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
-                {action}
-              </li>
-            ))}
-          </ul>
-        </aside>
-      </div>
-    </PageContainer>
+            <h2>{preset.panelTitle}</h2>
+            <p>{preset.panelDescription}</p>
+
+            <ul className="workspace-page__highlights">
+              {preset.highlights.map((item) => (
+                <li key={item}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <a href={route.ctaHref} className="btn btn-primary workspace-page__cta">
+              {route.ctaLabel}
+            </a>
+          </article>
+
+          <aside className="workspace-page__side-card">
+            <h3>Quick actions</h3>
+            <ul>
+              {quickActions.map((action) => (
+                <li key={action}>
+                  {action}
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -8,30 +8,33 @@ const navItems = [
 
 export function TopNavigation() {
   return (
-    <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/85 backdrop-blur">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6">
-        <a href="/" className="text-lg font-semibold tracking-tight text-slate-900">
+    <header className="top-nav">
+      <div className="top-nav__inner container-wide">
+        <a href="/" className="top-nav__brand">
+          <span className="top-nav__logo-mark" />
           BachKhoaViet
         </a>
 
-        <nav className="hidden items-center gap-2 md:flex">
+        <nav className="top-nav__links">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              className="top-nav__link"
             >
               {item.label}
             </a>
           ))}
         </nav>
 
-        <a
-          href="/login"
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
-        >
-          Đăng nhập
-        </a>
+        <div className="top-nav__actions">
+          <a href="/signup" className="btn btn-muted">
+            Đăng ký
+          </a>
+          <a href="/login" className="btn btn-primary">
+            Đăng nhập
+          </a>
+        </div>
       </div>
     </header>
   );

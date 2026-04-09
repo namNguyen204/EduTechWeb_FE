@@ -1,0 +1,345 @@
+.arena-layout {
+  width: min(1280px, calc(100% - 32px));
+  margin: 16px auto;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 14px;
+}
+
+.round-timer {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.round-timer p {
+  margin: 0 0 8px;
+  color: #1f8eff;
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+.timer-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.timer-box > div {
+  border: 2px solid #1f8dff;
+  border-radius: 18px;
+  width: 88px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+}
+.timer-box b {
+  font-size: 34px;
+  line-height: 1;
+  color: #111827;
+}
+
+.duel-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-bottom: 14px;
+}
+
+.player-card {
+  border: 2px solid #1f8dff;
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px;
+}
+
+.player-card.right {
+  border-color: #ff5a64;
+}
+.player-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.player-head.reverse {
+  justify-content: space-between;
+}
+.gamification-page .player-card .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #f2f4f7;
+  display: grid;
+  place-items: center;
+  border: 3px solid #1f8dff;
+}
+.gamification-page .player-card.right .avatar {
+  border-color: #ff5a64;
+}
+.player-head h3 {
+  margin: 0;
+  font-size: 26px;
+  color: #111827;
+}
+.player-head p {
+  margin: 4px 0 0;
+  color: #1f8eff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.acc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.acc-row strong {
+  font-size: 36px;
+  color: #1f8eff;
+}
+.player-card.right .acc-row strong {
+  color: #ff5861;
+}
+
+.bar {
+  margin-top: 8px;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: #e5eef7;
+}
+.bar div {
+  height: 100%;
+  border-radius: 999px;
+  background: #1f8dff;
+}
+.bar.danger div {
+  background: #ff5861;
+}
+
+.tags {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+}
+.tags.right {
+  justify-content: flex-end;
+}
+.tags span {
+  background: #e6f3ff;
+  color: #1f8eff;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  border: 1px solid #c5e0ff;
+}
+.player-card.right .tags span {
+  background: #ffe5e7;
+  color: #ff5a64;
+  border-color: #ffc5c9;
+}
+
+.vs-badge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1f8eff 0%, #106ed6 100%);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  border: 3px solid #fff;
+  color: #fff;
+}
+
+.question-panel {
+  border: 1px solid #dde5ef;
+  border-radius: 18px;
+  background: #fff;
+  padding: 16px 18px 22px;
+}
+.question-head {
+  display: flex;
+  gap: 8px;
+}
+.question-head span {
+  height: 28px;
+  border-radius: 999px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  background: #f0f4f8;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4f6075;
+  border: 1px solid #e1e8f0;
+}
+.question-head span:first-child {
+  background: #e6f3ff;
+  color: #1f8eff;
+  border-color: #c5e0ff;
+}
+.question-no {
+  text-align: center;
+  color: #6b7a90;
+  letter-spacing: 3px;
+  font-size: 13px;
+  margin: 16px 0 8px;
+}
+.question-panel h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 36px;
+  color: #111827;
+}
+.question-panel h1 {
+  margin: 12px 0 24px;
+  text-align: center;
+  color: #1f8eff;
+  font-size: clamp(30px, 4.2vw, 62px);
+}
+
+.answers-grid {
+  max-width: 620px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.answers-grid button {
+  height: 52px;
+  border-radius: 16px;
+  border: 1px solid #d1dae6;
+  background: #f8fafc;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
+}
+.answers-grid button.active {
+  background: #1f8dff;
+  border-color: #1f8dff;
+  color: #fff;
+}
+
+.arena-bottom-tools {
+  margin-top: 12px;
+  border: 1px solid #dde5ef;
+  border-radius: 14px;
+  background: #fff;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.skill-buttons {
+  display: flex;
+  gap: 8px;
+}
+.skill-buttons button {
+  border: 1px solid #d1dae6;
+  background: #f8fafc;
+  color: #111827;
+  border-radius: 14px;
+  height: 42px;
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.emoji-bar {
+  border: 1px solid #d1dae6;
+  background: #f8fafc;
+  border-radius: 12px;
+  height: 40px;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.arena-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.battle-card {
+  border: 1px solid #dde5ef;
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px;
+  flex: 1;
+}
+.battle-card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #111827;
+}
+.battle-card > p {
+  margin: 6px 0 12px;
+  color: #6b7a90;
+  font-size: 13px;
+}
+.battle-list {
+  border-top: 1px solid #e1e8f0;
+  padding-top: 10px;
+}
+.battle-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 8px;
+  border-radius: 12px;
+}
+.battle-item.you {
+  background: #e6f3ff;
+  border: 1px solid #c5e0ff;
+  margin-top: 6px;
+}
+.full-rank {
+  margin-top: 16px;
+  width: 100%;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #d1dae6;
+  background: #f8fafc;
+  color: #111827;
+  font-weight: 700;
+}
+.catchup-card {
+  border: 1px solid #c5e0ff;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #e6f3ff 0%, #1f8eff 100%);
+  padding: 12px;
+}
+.catchup-card h4,
+.catchup-card p {
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .arena-layout {
+    width: calc(100% - 18px);
+    grid-template-columns: 1fr;
+  }
+  .duel-panel {
+    grid-template-columns: 1fr;
+  }
+  .vs-badge {
+    position: static;
+    transform: none;
+    margin: 0 auto;
+  }
+  .answers-grid {
+    grid-template-columns: 1fr;
+  }
+  .arena-bottom-tools {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

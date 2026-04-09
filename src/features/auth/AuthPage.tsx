@@ -1,37 +1,61 @@
-import { PageContainer } from "../../shared/ui/PageContainer";
+import "../../styles/pages/AuthPage.scss";
 
 export function AuthPage() {
   return (
-    <PageContainer
-      title="Sign in / Sign up"
-      subtitle="Mẫu giao diện auth đã migrate sang TypeScript và TailwindCSS, sẵn sàng tích hợp API xác thực."
-    >
-      <form className="grid gap-4 md:max-w-md">
-        <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Email
-          <input
-            type="email"
-            placeholder="you@example.com"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-slate-300 transition focus:ring-2"
-          />
-        </label>
+    <main className="auth-page container-page">
+      <section className="auth-page__left">
+        <div className="auth-page__brand">
+          <span className="auth-page__logo-mark" />
+          BachKhoaViet
+        </div>
 
-        <label className="grid gap-1 text-sm font-medium text-slate-700">
-          Password
-          <input
-            type="password"
-            placeholder="••••••••"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-slate-300 transition focus:ring-2"
-          />
-        </label>
+        <h1>Welcome back, Scholar!</h1>
+        <p>
+          Truy cập dashboard học tập cá nhân hóa bằng AI. Giao diện auth được tách SCSS riêng để
+          dễ tùy chỉnh theo nhu cầu sản phẩm.
+        </p>
 
-        <button
-          type="button"
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
-        >
-          Đăng nhập
-        </button>
-      </form>
-    </PageContainer>
+        <div className="auth-page__left-card">
+          <p>Trusted by 50,000+ students</p>
+          <p>Học sinh, giáo viên và phụ huynh đang dùng mỗi ngày.</p>
+        </div>
+      </section>
+
+      <section className="auth-page__right">
+        <h2>Sign in / Sign up</h2>
+        <p>Đăng nhập để vào đúng workspace theo vai trò.</p>
+
+        <div className="auth-page__tabs">
+          <button type="button" className="active">
+            Login
+          </button>
+          <button type="button">
+            Sign Up
+          </button>
+        </div>
+
+        <form className="auth-page__form">
+          <label>
+            Email Address
+            <input
+              type="email"
+              placeholder="you@example.com"
+            />
+          </label>
+
+          <label>
+            Password
+            <input
+              type="password"
+              placeholder="••••••••"
+            />
+          </label>
+
+          <button type="button" className="btn btn-primary auth-page__submit">
+            Đăng nhập →
+          </button>
+        </form>
+      </section>
+    </main>
   );
 }

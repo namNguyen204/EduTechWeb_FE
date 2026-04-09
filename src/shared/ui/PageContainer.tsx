@@ -7,11 +7,11 @@ interface PageContainerProps extends PropsWithChildren {
 
 export function PageContainer({ title, subtitle, children }: PageContainerProps) {
   return (
-    <main className="mx-auto w-full max-w-7xl px-6 py-10">
-      <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">{title}</h1>
-        <p className="mt-2 text-sm leading-6 text-slate-600">{subtitle}</p>
-        <div className="mt-8">{children}</div>
+    <main className="page-container">
+      <section className="page-container__surface">
+        <h1>{title}</h1>
+        <p>{subtitle}</p>
+        <div className="page-container__content">{children}</div>
       </section>
     </main>
   );
