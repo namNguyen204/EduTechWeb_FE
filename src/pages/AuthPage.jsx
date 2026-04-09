@@ -6,6 +6,7 @@ function AuthPage() {
   const [activeTab, setActiveTab] = React.useState(
     tabParam === "signup" ? "signup" : "login",
   );
+  const [role, setRole] = React.useState("student");
 
   return (
     <div className="auth-page">
@@ -45,6 +46,23 @@ function AuthPage() {
               ? "Access your personalized AI-powered educational dashboard."
               : "Create your account and start your learning journey today."}
           </p>
+
+          <div className="auth-role-selector">
+            <button
+              type="button"
+              className={`auth-role-option ${role === "student" ? "active" : ""}`}
+              onClick={() => setRole("student")}
+            >
+              👨‍🎓 Student
+            </button>
+            <button
+              type="button"
+              className={`auth-role-option ${role === "teacher" ? "active" : ""}`}
+              onClick={() => setRole("teacher")}
+            >
+              👨‍🏫 Teacher
+            </button>
+          </div>
 
           <div className="auth-tabs">
             <button
@@ -116,7 +134,13 @@ function AuthPage() {
           <a
             className="auth-submit"
             href={
-              activeTab === "login" ? "/student/home" : "/student/onboarding"
+              activeTab === "login"
+                ? role === "teacher"
+                  ? "/teacher/home"
+                  : "/student/home"
+                : role === "teacher"
+                  ? "/teacher/onboarding"
+                  : "/student/onboarding"
             }
           >
             {activeTab === "login" ? "Log In →" : "Create Account →"}
