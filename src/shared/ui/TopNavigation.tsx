@@ -1,3 +1,6 @@
+import { isUserLoggedIn, getUserSession } from "../../core/http";
+import { logout } from "../../services";
+
 const navItems = [
   { label: "Trang chủ", href: "/" },
   { label: "Học sinh", href: "/student" },
@@ -7,6 +10,9 @@ const navItems = [
 ];
 
 export function TopNavigation() {
+  const userLoggedIn = isUserLoggedIn();
+  const userSession = getUserSession();
+
   return (
     <header className="top-nav">
       <div className="top-nav__inner container-wide">
@@ -28,12 +34,28 @@ export function TopNavigation() {
         </nav>
 
         <div className="top-nav__actions">
-          <a href="/signup" className="btn btn-muted">
-            Đăng ký
-          </a>
-          <a href="/login" className="btn btn-primary">
-            Đăng nhập
-          </a>
+          {userLoggedIn && userSession ? (
+            <>
+              <span className="top-nav__user-name">
+                {userSession.fullName}
+              </span>
+              <button
+                className="btn btn-muted"
+                onClick={() => logout()}
+              >
+                Đăng xuất
+              </button>
+            </>
+          ) : (
+            <>
+              <a href="/signup" className="btn btn-muted">
+                Đăng ký
+              </a>
+              <a href="/login" className="btn btn-primary">
+                Đăng nhập
+              </a>
+            </>
+          )}
         </div>
       </div>
     </header>
