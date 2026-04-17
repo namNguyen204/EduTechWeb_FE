@@ -61,7 +61,7 @@ function TeacherProfilePage(): JSX.Element {
 
         <nav className="lp-nav">
           <a href="/teacher/home">My Classes</a>
-          <a href="/teacher/course">Assignment Manager</a>
+          <a href="/teacher/subjects">Assignment Manager</a>
           <a href="/teacher/exams">Quizzes & Tests</a>
           <a href="/teacher/arena">Class Performance</a>
           <a href="/teacher/leaderboard">Analytics Dashboard</a>
@@ -95,7 +95,7 @@ function TeacherProfilePage(): JSX.Element {
             </div>
           </div>
           <div className="lp-actions">
-            <a href="/teacher/course" className="scanner">
+            <a href="/teacher/subjects" className="scanner">
               🧠 AI Scanner
             </a>
             <span>🔔</span>

@@ -19,9 +19,25 @@ interface SubjectsListParams {
   sort?: Array<{ orderBy: string; order: "asc" | "desc" }>;
 }
 
+export interface CreateSubjectRequest {
+  name: string;
+  iconUrl: {
+    publicId: string;
+    url: string;
+  };
+}
+
+export interface CreateSubjectResponse {
+  success: boolean;
+  data: Subject;
+  message: string;
+  statusCode: number;
+}
+
 const SUBJECTS_ENDPOINTS = {
   list: "/subjects",
   detail: (id: string) => `/subjects/${id}`,
+  create: "/subjects",
 } as const;
 
 export const subjectsService = {
@@ -65,5 +81,14 @@ export const subjectsService = {
       limit,
       filters: { name: keyword },
     });
+  },
+
+  async create(data: CreateSubjectRequest): Promise<Subject> {
+    const response = await apiClient.post<CreateSubjectResponse>(
+      SUBJECTS_ENDPOINTS.create,
+      data,
+    );
+
+    return response.data;
   },
 };

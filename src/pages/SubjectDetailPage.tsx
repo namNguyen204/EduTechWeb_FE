@@ -47,7 +47,7 @@ function SubjectDetailPage({ subjectId }: SubjectDetailPageProps): JSX.Element {
       <div className="subject-detail-page">
         <div className="error-container">
           <p>❌ No subject ID provided</p>
-          <a href="/teacher/course">Back to Subjects</a>
+          <a href="/teacher/subjects">Back to Subjects</a>
         </div>
       </div>
     );
@@ -68,7 +68,7 @@ function SubjectDetailPage({ subjectId }: SubjectDetailPageProps): JSX.Element {
       <div className="subject-detail-page">
         <div className="error-container">
           <p>❌ {error || "Subject not found"}</p>
-          <a href="/teacher/course">Back to Subjects</a>
+          <a href="/teacher/subjects">Back to Subjects</a>
         </div>
       </div>
     );
@@ -88,7 +88,7 @@ function SubjectDetailPage({ subjectId }: SubjectDetailPageProps): JSX.Element {
 
         <nav className="detail-nav">
           <a href="/teacher/home">My Classes</a>
-          <a href="/teacher/course" className="active">
+          <a href="/teacher/subjects" className="active">
             Subjects & Courses
           </a>
           <a href="/teacher/exams">Quizzes & Tests</a>
@@ -105,7 +105,7 @@ function SubjectDetailPage({ subjectId }: SubjectDetailPageProps): JSX.Element {
       <main className="detail-main">
         <header className="detail-topbar">
           <div className="detail-topbar-left">
-            <a href="/teacher/course" className="back-btn">
+            <a href="/teacher/subjects" className="back-btn">
               ← Back
             </a>
           </div>

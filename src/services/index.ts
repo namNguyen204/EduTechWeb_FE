@@ -4,6 +4,8 @@ export { authService } from "./auth.service";
 export { logout, isAuthenticated } from "./logout.service";
 export { subjectsService } from "./subjects.service";
 export { coursesService } from "./courses.service";
+export { uploadsService } from "./uploads.service";
+export { gradeLevelsService } from "./grade-levels.service";
 export type { LoginRequest as LoginPayload } from "../types/request";
 export type { LoginResponse as AuthResponse } from "../types/response";
 // export type {

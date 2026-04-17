@@ -127,7 +127,7 @@ const teacherCourseRoute: RouteMeta = {
   subtitle: "Quản trị nội dung bài giảng, tài nguyên và bài tập.",
   role: "teacher",
   ctaLabel: "Mở quản lý khóa học",
-  ctaHref: "/teacher/course",
+  ctaHref: "/teacher/subjects",
 };
 
 const teacherOnboardingRoute: RouteMeta = {
@@ -241,7 +241,7 @@ export const routeTable: Record<string, RouteMeta> = {
   "/teacher": teacherLearningPathRoute,
   "/teacher/home": teacherLearningPathRoute,
   "/teacher/learning-path": teacherLearningPathRoute,
-  "/teacher/course": teacherCourseRoute,
+  "/teacher/subjects": teacherCourseRoute,
   "/teacher/onboarding": teacherOnboardingRoute,
   "/teacher/arena": teacherArenaRoute,
   "/teacher/leaderboard": teacherLeaderboardRoute,

@@ -5,7 +5,7 @@ import { SubjectsTable } from "../components/teacher/SubjectsTable";
 import type { Subject } from "../types/response";
 import "../styles/pages/TeacherCoursePage.scss";
 
-function TeacherCoursePage(): JSX.Element {
+function TeacherSubjectPage(): JSX.Element {
   const [subjects, setSubjects] = React.useState<Subject[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -54,6 +54,10 @@ function TeacherCoursePage(): JSX.Element {
     setPage(1);
   };
 
+  const handleViewCourses = (subjectId: string) => {
+    window.location.href = `/teacher/courses?subjectId=${subjectId}`;
+  };
+
   return (
     <div className="lp-page scanner-page">
       <div className="sidebar-overlay"></div>
@@ -68,7 +72,7 @@ function TeacherCoursePage(): JSX.Element {
 
         <nav className="lp-nav">
           <a href="/teacher/home">My Classes</a>
-          <a href="/teacher/course" className="active">
+          <a href="/teacher/subjects" className="active">
             Subjects & Courses
           </a>
           <a href="/teacher/exams">Quizzes & Tests</a>
@@ -109,7 +113,9 @@ function TeacherCoursePage(): JSX.Element {
             </div>
           </div>
           <div className="lp-actions">
-            <button className="scanner active">➕ Add Subject</button>
+            <a href="/teacher/subjects/create" className="scanner active" style={{ textDecoration: "none", cursor: "pointer" }}>
+              ➕ Add Subject
+            </a>
             <span>🔔</span>
             <a href="/teacher/profile" className="lp-user">
               <div>
@@ -206,6 +212,14 @@ function TeacherCoursePage(): JSX.Element {
                     )}
                   </p>
                 </div>
+                <div className="detail-actions">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleViewCourses(selectedSubject.id)}
+                  >
+                    📖 View Courses
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -215,4 +229,4 @@ function TeacherCoursePage(): JSX.Element {
   );
 }
 
-export default TeacherCoursePage;
+export default TeacherSubjectPage;

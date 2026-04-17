@@ -1,10 +1,8 @@
 import { useEffect, useState, type JSX } from "react";
-import { useNavigate } from "react-router-dom";
 import type { Course } from "../types/response";
 import { coursesService } from "../services";
 import { CoursesTable } from "../components/teacher/CoursesTable";
-import { PageContainer } from "../shared/ui/PageContainer";
-import "../styles/pages/TeacherCoursesPage.scss";
+import "../styles/pages/TeacherCoursePage.scss";
 
 interface SearchFilters {
   status: string;
@@ -14,7 +12,12 @@ interface SearchFilters {
 }
 
 export function TeacherCoursesPage(): JSX.Element {
-  const navigate = useNavigate();
+  // Parse query params from URL
+  const getQueryParam = (key: string): string => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(key) || "";
+  };
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +29,7 @@ export function TeacherCoursesPage(): JSX.Element {
   const [filters, setFilters] = useState<SearchFilters>({
     status: "",
     gradeLevel: "",
-    subjectId: "",
+    subjectId: getQueryParam("subjectId"),
     sortBy: "createdAt:desc",
   });
 
@@ -98,11 +101,14 @@ export function TeacherCoursesPage(): JSX.Element {
   const handleViewCourse = (courseId: string) => {
     const course = courses.find((c) => c.id === courseId);
     setSelectedCourse(course || null);
-    navigate(`/teacher/courses/${courseId}`);
+    // window.location.href = `/teacher/courses/${courseId}`;
   };
 
+  const handleViewDetails = (courseId: string) => {
+    window.location.href = `/teacher/courses/${courseId}`;
+  }
   const handleEditCourse = (courseId: string) => {
-    navigate(`/teacher/courses/${courseId}/edit`);
+    window.location.href = `/teacher/courses/${courseId}/edit`;
   };
 
   const handleDeleteCourse = async (courseId: string) => {
@@ -126,10 +132,11 @@ export function TeacherCoursesPage(): JSX.Element {
   };
 
   const resetFilters = () => {
+    const currentSubjectId = filters.subjectId; // Preserve subjectId
     setFilters({
       status: "",
       gradeLevel: "",
-      subjectId: "",
+      subjectId: currentSubjectId, // Keep subjectId
       sortBy: "createdAt:desc",
     });
     setSearchKeyword("");
@@ -137,228 +144,262 @@ export function TeacherCoursesPage(): JSX.Element {
   };
 
   return (
-    <PageContainer title="My Courses" subtitle="Manage your courses and chapters">
-      <div className="teacher-courses-container">
-        <div className="teacher-courses">
-          <div className="page-header">
-            <div className="header-content">
-              <h1>📚 My Courses</h1>
-              <p className="header-info">Total: {totalCourses} courses</p>
+    <div className="lp-page scanner-page">
+      <div className="sidebar-overlay"></div>
+      <aside className="lp-sidebar">
+        <a href="/teacher/home" className="lp-brand">
+          <span className="logo-mark" />
+          <div>
+            <strong>BachKhoaViet</strong>
+            <small>AI Educational Platform</small>
+          </div>
+        </a>
+
+        <nav className="lp-nav">
+          <a href="/teacher/home">My Classes</a>
+          <a href="/teacher/subjects">Subjects & Courses</a>
+          <a href="/teacher/exams">Quizzes & Tests</a>
+          <a href="/teacher/arena">Class Performance</a>
+          <a href="/teacher/leaderboard">Analytics Dashboard</a>
+          <a href="/teacher/messages">Student Messages</a>
+        </nav>
+
+        <a href="/teacher/profile" className="lp-profile-shortcut">
+          ⚙ Profile & Settings
+        </a>
+
+        <article className="lp-upgrade">
+          <p>PRO MEMBER</p>
+          <h4>Get unlimited AI scans and detailed solutions.</h4>
+          <button>Upgrade Now</button>
+        </article>
+      </aside>
+
+      <main className="lp-main">
+        <header className="lp-topbar">
+          <div className="lp-topbar-left">
+           
+            <button
+              className="sidebar-toggle"
+              onClick={() => window.toggleSidebar?.()}
+            >
+              ☰
+            </button>
+          </div>
+          <div className="lp-topbar-center">
+            <div className="lp-search">
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+              />
             </div>
-            <button className="btn btn-primary" onClick={() => navigate("/teacher/courses/create")}>
+          </div>
+          <div className="lp-actions">
+            <button className="scanner active" onClick={() => window.location.href = "/teacher/courses/create"}>
               ➕ Create Course
             </button>
+            <span>🔔</span>
+            <a href="/teacher/profile" className="lp-user">
+              <div>
+                <strong>Nam Nguyen</strong>
+                <small>Mathematics Teacher</small>
+              </div>
+              <div className="avatar">🧑</div>
+            </a>
+          </div>
+        </header>
+
+        <section className="course-main">
+          <div className="course-breadcrumb">
+            Subjects &gt; Available Courses &gt; Manage Materials
           </div>
 
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          {/* Search Bar */}
-          <div className="search-bar">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search courses by title..."
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSearch();
-              }}
-            />
-            <button className="btn btn-secondary" onClick={handleSearch}>
-              🔍 Search
-            </button>
-            <button className="btn btn-ghost" onClick={resetFilters}>
-              ✕ Clear All
-            </button>
-          </div>
-
-          {/* Filters */}
-          <div className="filters-bar">
-            <select
-              className="form-control"
-              value={filters.status}
-              onChange={(e) => handleFilterChange("status", e.target.value)}
-            >
-              <option value="">All Status</option>
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
-              <option value="archived">Archived</option>
-            </select>
-
-            <select
-              className="form-control"
-              value={filters.gradeLevel}
-              onChange={(e) => handleFilterChange("gradeLevel", e.target.value)}
-            >
-              <option value="">All Grade Levels</option>
-              <option value="Grade 1">Grade 1</option>
-              <option value="Grade 2">Grade 2</option>
-              <option value="Grade 3">Grade 3</option>
-              <option value="Grade 4">Grade 4</option>
-              <option value="Grade 5">Grade 5</option>
-              <option value="Grade 6">Grade 6</option>
-              <option value="Grade 7">Grade 7</option>
-              <option value="Grade 8">Grade 8</option>
-              <option value="Grade 9">Grade 9</option>
-              <option value="Grade 10">Grade 10</option>
-              <option value="Grade 11">Grade 11</option>
-              <option value="Grade 12">Grade 12</option>
-            </select>
-
-            <select
-              className="form-control"
-              value={filters.sortBy}
-              onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-            >
-              <option value="createdAt:desc">Newest First</option>
-              <option value="createdAt:asc">Oldest First</option>
-              <option value="title:asc">Title A-Z</option>
-              <option value="title:desc">Title Z-A</option>
-            </select>
-          </div>
-
-          {/* Courses Table */}
-          <CoursesTable
-            courses={courses}
-            isLoading={isLoading}
-            onSelectCourse={handleViewCourse}
-            onEditCourse={handleEditCourse}
-            onDeleteCourse={handleDeleteCourse}
-          />
-
-          {/* Pagination */}
-          {!isLoading && totalPages > 1 && (
-            <div className="pagination">
-              <button
-                className="btn"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                ← Previous
-              </button>
-              <span className="pagination-info">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className="btn"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next →
-              </button>
+          {error && (
+            <div className="error-message">
+              <p>❌ {error}</p>
             </div>
           )}
-        </div>
 
-        {/* Detail Panel */}
-        {selectedCourse && (
-          <div className="course-detail-panel">
-            <div className="detail-header">
-              <h3>{selectedCourse.title}</h3>
-              <button 
-                className="btn-close" 
-                onClick={() => setSelectedCourse(null)}
-              >
-                ✕
+          <div className="subjects-container">
+             {filters.subjectId && (
+              <a href="/teacher/subjects" className="back-btn" style={{ marginRight: "1rem" }}>
+                ← Back to Subjects
+              </a>
+            )}
+            <div className="subjects-header">
+              <h2>📚 Available Courses</h2>
+              <div className="subjects-stats">
+                <span>Total: {totalCourses}</span>
+                <span>Page: {currentPage} of {totalPages}</span>
+              </div>
+            </div>
+
+            {/* Search & Filters */}
+            <div className="search-bar">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search courses by title..."
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearch();
+                }}
+              />
+              <button className="btn btn-secondary" onClick={handleSearch}>
+                🔍 Search
+              </button>
+              <button className="btn btn-secondary" onClick={resetFilters}>
+                ✕ Clear All
               </button>
             </div>
-            
-            <div className="detail-content">
-              {selectedCourse.thumbnail && typeof selectedCourse.thumbnail === "string" && (
-                <img 
-                  src={selectedCourse.thumbnail} 
-                  alt={selectedCourse.title} 
-                  className="detail-thumbnail"
-                />
-              )}
-              
-              <div className="detail-info">
-                <div className="info-item">
-                  <label>ID:</label>
-                  <span className="info-value">{selectedCourse.id}</span>
-                </div>
-                
-                <div className="info-item">
-                  <label>Subject:</label>
-                  <span className="info-value">{selectedCourse.subjectId || "N/A"}</span>
-                </div>
-                
-                <div className="info-item">
-                  <label>Grade Level:</label>
-                  <span className="info-value">{selectedCourse.gradeLevel || "N/A"}</span>
-                </div>
-                
-                <div className="info-item">
-                  <label>Type:</label>
-                  <span className={`badge badge-${selectedCourse.type === "premium" ? "primary" : "secondary"}`}>
-                    {selectedCourse.type || "N/A"}
-                  </span>
-                </div>
-                
-                <div className="info-item">
-                  <label>Status:</label>
-                  <span className={`badge badge-${getStatusBadgeClass(selectedCourse.status)}`}>
-                    {selectedCourse.status || "N/A"}
-                  </span>
-                </div>
-                
-                <div className="info-item">
-                  <label>Created:</label>
-                  <span className="info-value">
-                    {selectedCourse.createdAt 
-                      ? new Date(selectedCourse.createdAt).toLocaleString() 
-                      : "N/A"}
-                  </span>
-                </div>
-                
-                <div className="info-item">
-                  <label>Updated:</label>
-                  <span className="info-value">
-                    {selectedCourse.updatedAt 
-                      ? new Date(selectedCourse.updatedAt).toLocaleString() 
-                      : "N/A"}
-                  </span>
-                </div>
 
-                {selectedCourse.description && (
-                  <div className="info-item">
-                    <label>Description:</label>
-                    <p className="info-description">{selectedCourse.description}</p>
-                  </div>
-                )}
+            <div className="filters-bar">
+              <select
+                className="form-control"
+                value={filters.status}
+                onChange={(e) => handleFilterChange("status", e.target.value)}
+              >
+                <option value="">All Status</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+              </select>
+
+              <select
+                className="form-control"
+                value={filters.gradeLevel}
+                onChange={(e) => handleFilterChange("gradeLevel", e.target.value)}
+              >
+                <option value="">All Grade Levels</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Grade 3">Grade 3</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 11">Grade 11</option>
+                <option value="Grade 12">Grade 12</option>
+              </select>
+
+              <select
+                className="form-control"
+                value={filters.sortBy}
+                onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+              >
+                <option value="createdAt:desc">Newest First</option>
+                <option value="createdAt:asc">Oldest First</option>
+                <option value="title:asc">Title A-Z</option>
+                <option value="title:desc">Title Z-A</option>
+              </select>
+            </div>
+
+            {/* Courses Table */}
+            <CoursesTable
+              courses={courses}
+              isLoading={isLoading}
+              onSelectCourse={handleViewCourse}
+              onEditCourse={handleEditCourse}
+              onDeleteCourse={handleDeleteCourse}
+            />
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  ← Previous
+                </button>
+                <span>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Next →
+                </button>
               </div>
+            )}
+          </div>
 
-              <div className="detail-actions">
-                <button 
-                  className="btn btn-primary btn-block"
-                  onClick={() => handleViewCourse(selectedCourse.id)}
+          {/* Course Detail Card */}
+          {selectedCourse && (
+            <div className="subject-detail-card">
+              <div className="detail-header">
+                <h3>{selectedCourse.title}</h3>
+                <button
+                  className="close-btn"
+                  onClick={() => setSelectedCourse(null)}
                 >
-                  👁️ View Details
+                  ✕
                 </button>
-                <button 
-                  className="btn btn-secondary btn-block"
-                  onClick={() => {
-                    handleEditCourse(selectedCourse.id);
-                    setSelectedCourse(null);
-                  }}
-                >
-                  ✏️ Edit Course
-                </button>
-                <button 
-                  className="btn btn-danger btn-block"
-                  onClick={() => {
-                    handleDeleteCourse(selectedCourse.id);
-                    setSelectedCourse(null);
-                  }}
-                >
-                  🗑️ Delete
-                </button>
+              </div>
+              <div className="detail-content">
+                {selectedCourse.thumbnail && typeof selectedCourse.thumbnail === "string" && (
+                  <img
+                    src={selectedCourse.thumbnail}
+                    alt={selectedCourse.title}
+                  />
+                )}
+                <div className="detail-info">
+                  <p>
+                    <strong>ID:</strong> {selectedCourse.id}
+                  </p>
+                  <p>
+                    <strong>Grade Level:</strong> {selectedCourse.gradeLevel || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Type:</strong>{" "}
+                    <span className={`badge badge-${selectedCourse.type === "premium" ? "primary" : "secondary"}`}>
+                      {selectedCourse.type}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    <span className={`badge badge-${getStatusBadgeClass(selectedCourse.status)}`}>
+                      {selectedCourse.status}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Created:</strong>{" "}
+                    {new Date(selectedCourse.createdAt).toLocaleString("vi-VN")}
+                  </p>
+                </div>
+                <div className="detail-actions">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleViewDetails(selectedCourse.id)}
+                  >
+                    👁️ View Details
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      handleEditCourse(selectedCourse.id);
+                      setSelectedCourse(null);
+                    }}
+                  >
+                    ✏️ Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                      handleDeleteCourse(selectedCourse.id);
+                      setSelectedCourse(null);
+                    }}
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-    </PageContainer>
+          )}
+        </section>
+      </main>
+    </div>
   );
 }
 

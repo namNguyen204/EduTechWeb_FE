@@ -23,7 +23,7 @@ function TeacherExamResultsPage(): JSX.Element {
 
         <nav className="lp-nav">
           <a href="/teacher/home">My Classes</a>
-          <a href="/teacher/course">Assignment Manager</a>
+          <a href="/teacher/subjects">Assignment Manager</a>
           <a href="/teacher/exams" className="active">
             Quizzes & Tests
           </a>

@@ -90,7 +90,7 @@ function TeacherOnboardingPage(): JSX.Element {
           <a href="/" className="back-link">
             ← Back
           </a>
-          <a href="/teacher/course" className="next-btn">
+          <a href="/teacher/subjects" className="next-btn">
             Continue →
           </a>
         </section>

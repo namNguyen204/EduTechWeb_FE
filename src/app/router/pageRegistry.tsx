@@ -14,9 +14,11 @@ import OnboardingPage from "../../pages/OnboardingPage.tsx";
 import ParentPortalPage from "../../pages/ParentPortalPage.tsx";
 import StudentProfilePage from "../../pages/StudentProfilePage.tsx";
 import SubjectDetailPage from "../../pages/SubjectDetailPage.tsx";
+import SubjectCreatePage from "../../pages/SubjectCreatePage.tsx";
+import CourseCreatePage from "../../pages/CourseCreatePage.tsx";
 import { CourseDetailPage } from "../../pages/CourseDetailPage.tsx";
 import TeacherArenaPage from "../../pages/TeacherArenaPage.tsx";
-import TeacherCoursePage from "../../pages/TeacherSubjectPage.tsx";
+import TeacherSubjectPage from "../../pages/TeacherSubjectPage.tsx";
 import TeacherCoursesPage from "../../pages/TeacherCoursesPage.tsx";
 import TeacherExamResultsPage from "../../pages/TeacherExamResultsPage.tsx";
 import TeacherLeaderboardPage from "../../pages/TeacherLeaderboardPage.tsx";
@@ -68,7 +70,7 @@ const ProtectedStudentDashboard = withProtectedRoute(DashboardPage, {
 const ProtectedTeacherLearningPath = withProtectedRoute(TeacherLearningPathPage, {
   allowedRoles: ["TEACHER"],
 });
-const ProtectedTeacherCourse = withProtectedRoute(TeacherCoursePage, {
+const ProtectedTeacherSubjects = withProtectedRoute(TeacherSubjectPage, {
   allowedRoles: ["TEACHER"],
 });
 const ProtectedTeacherOnboarding = withProtectedRoute(TeacherOnboardingPage, {
@@ -95,11 +97,21 @@ const ProtectedSubjectDetail = withProtectedRoute(SubjectDetailPage, {
   allowedRoles: ["TEACHER"],
 });
 
+// Protected subject create page
+const ProtectedSubjectCreate = withProtectedRoute(SubjectCreatePage, {
+  allowedRoles: ["TEACHER"],
+});
+
 // Protected course pages
 const ProtectedCoursesList = withProtectedRoute(TeacherCoursesPage, {
   allowedRoles: ["TEACHER"],
 });
 const ProtectedCourseDetail = withProtectedRoute(CourseDetailPage, {
+  allowedRoles: ["TEACHER"],
+});
+
+// Protected course create page
+const ProtectedCourseCreate = withProtectedRoute(CourseCreatePage, {
   allowedRoles: ["TEACHER"],
 });
 
@@ -191,10 +203,10 @@ export const pageRegistry: Record<string, RouteEntry> = {
   "/teacher": workspaceRoute(ProtectedTeacherLearningPath),
   "/teacher/home": workspaceRoute(ProtectedTeacherLearningPath),
   "/teacher/learning-path": workspaceRoute(ProtectedTeacherLearningPath),
-  "/teacher/course": workspaceRoute(ProtectedTeacherCourse),
-  "/teacher/course/:id": workspaceRoute(ProtectedSubjectDetail),
+  "/teacher/subjects": workspaceRoute(ProtectedTeacherSubjects),
+  "/teacher/subjects/create": workspaceRoute(ProtectedSubjectCreate),
   "/teacher/courses": workspaceRoute(ProtectedCoursesList),
-  "/teacher/courses/create": workspaceRoute(ProtectedCoursesList),
+  "/teacher/courses/create": workspaceRoute(ProtectedCourseCreate),
   "/teacher/courses/:courseId": workspaceRoute(ProtectedCourseDetail),
   "/teacher/courses/:courseId/edit": workspaceRoute(ProtectedCourseDetail),
   "/teacher/onboarding": workspaceRoute(ProtectedTeacherOnboarding),

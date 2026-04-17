@@ -27,12 +27,31 @@ interface ChaptersListParams {
   sort?: Array<{ orderBy: string; order: "asc" | "desc" }>;
 }
 
+export interface CreateCourseRequest {
+  subjectId: string;
+  title: string;
+  description: string;
+  gradeLevel: string;
+  thumbnailPublicId: string;
+  thumbnailUrl: string;
+  type?: "free" | "premium";
+  status?: "draft" | "published" | "archived";
+}
+
+export interface CreateCourseResponse {
+  success: boolean;
+  data: Course;
+  message: string;
+  statusCode: number;
+}
+
 const COURSES_ENDPOINTS = {
   myCourses: "/courses/my-courses",
   list: "/courses",
   detail: (id: string) => `/courses/${id}`,
   chapters: "/chapters",
   updateChapter: (id: string) => `/chapters/${id}`,
+  create: "/courses",
 } as const;
 
 export const coursesService = {
@@ -75,6 +94,26 @@ export const coursesService = {
       limit,
       filters: { status: "published" },
     });
+  },
+
+  async create(data: CreateCourseRequest): Promise<Course> {
+    const response = await apiClient.post<CreateCourseResponse>(
+      COURSES_ENDPOINTS.create,
+      {
+        subjectId: data.subjectId,
+        title: data.title,
+        description: data.description,
+        gradeLevel: data.gradeLevel,
+        thumbnail: {
+          publicId: data.thumbnailPublicId,
+          url: data.thumbnailUrl,
+        },
+        type: data.type || "free",
+        status: data.status || "draft",
+      },
+    );
+
+    return response.data;
   },
 
   // ==================== Chapters ====================

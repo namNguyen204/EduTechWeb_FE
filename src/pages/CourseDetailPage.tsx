@@ -1,5 +1,4 @@
 import { useEffect, useState, type JSX } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import type { Course, Chapter } from "../types/response";
 import { coursesService } from "../services";
 import { ChaptersList } from "../components/teacher/ChaptersList";
@@ -10,8 +9,8 @@ interface EditingChapter extends Chapter {
 }
 
 export function CourseDetailPage(): JSX.Element {
-  const { courseId } = useParams<{ courseId: string }>();
-  const navigate = useNavigate();
+  // Extract courseId from pathname
+  const courseId = window.location.pathname.split("/")[3];
 
   const [course, setCourse] = useState<Course | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -197,7 +196,7 @@ export function CourseDetailPage(): JSX.Element {
         <div className="course-detail-error">
           <h3>Error</h3>
           <p>{error || "Course not found"}</p>
-          <button className="btn btn-primary" onClick={() => navigate(-1)}>
+          <button className="btn btn-primary" onClick={() => window.history.back()}>
             ← Go Back
           </button>
         </div>
@@ -240,7 +239,7 @@ export function CourseDetailPage(): JSX.Element {
           </div>
 
           <div className="course-header-actions">
-            <button className="btn btn-primary" onClick={() => navigate(-1)}>
+            <button className="btn btn-primary" onClick={() => window.history.back()}>
               ← Back
             </button>
             <button className="btn btn-secondary">✏️ Edit Course</button>
