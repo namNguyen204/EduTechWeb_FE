@@ -1,6 +1,6 @@
 import { useEffect, useState, type JSX } from "react";
-import type { Course } from "../types/response";
-import { coursesService } from "../services";
+import type { Course, Subject } from "../types/response";
+import { coursesService, subjectsService, logout } from "../services";
 import { CoursesTable } from "../components/teacher/CoursesTable";
 import "../styles/pages/TeacherCoursePage.scss";
 
@@ -26,6 +26,7 @@ export function TeacherCoursesPage(): JSX.Element {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCourses, setTotalCourses] = useState(0);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   const [filters, setFilters] = useState<SearchFilters>({
     status: "",
     gradeLevel: "",
@@ -34,6 +35,26 @@ export function TeacherCoursesPage(): JSX.Element {
   });
 
   const pageSize = 10;
+
+  // Load current subject info if filtering by subject
+  useEffect(() => {
+    const loadSubjectInfo = async () => {
+      if (!filters.subjectId) {
+        setCurrentSubject(null);
+        return;
+      }
+
+      try {
+        const subject = await subjectsService.getById(filters.subjectId);
+        setCurrentSubject(subject);
+      } catch (err) {
+        console.error("Failed to load subject info:", err);
+        setCurrentSubject(null);
+      }
+    };
+
+    loadSubjectInfo();
+  }, [filters.subjectId]);
 
   // Load courses
   useEffect(() => {
@@ -197,7 +218,16 @@ export function TeacherCoursesPage(): JSX.Element {
             </div>
           </div>
           <div className="lp-actions">
-            <button className="scanner active" onClick={() => window.location.href = "/teacher/courses/create"}>
+            <button 
+              className="scanner active" 
+              onClick={() => {
+                const subjectId = new URLSearchParams(window.location.search).get("subjectId");
+                const redirectUrl = subjectId 
+                  ? `/teacher/courses/create?subjectId=${subjectId}`
+                  : "/teacher/courses/create";
+                window.location.href = redirectUrl;
+              }}
+            >
               ➕ Create Course
             </button>
             <span>🔔</span>
@@ -224,9 +254,44 @@ export function TeacherCoursesPage(): JSX.Element {
 
           <div className="subjects-container">
              {filters.subjectId && (
-              <a href="/teacher/subjects" className="back-btn" style={{ marginRight: "1rem" }}>
-                ← Back to Subjects
-              </a>
+              <div style={{
+                marginBottom: "20px",
+                padding: "15px",
+                backgroundColor: "#f0f8ff",
+                borderRadius: "8px",
+                borderLeft: "4px solid #4a90e2"
+              }}>
+                <button 
+                  onClick={() => window.location.href = "/teacher/subjects"}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#4a90e2",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    marginBottom: "10px",
+                    textDecoration: "underline"
+                  }}
+                >
+                  ← Back to Subjects
+                </button>
+                <div>
+                  <strong>📚 Subject:</strong> {currentSubject?.name || "Loading..."}
+                  {currentSubject?.iconUrl && (
+                    <img 
+                      src={currentSubject.iconUrl.url} 
+                      alt={currentSubject.name}
+                      style={{
+                        marginLeft: "10px",
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "4px",
+                        verticalAlign: "middle"
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
             )}
             <div className="subjects-header">
               <h2>📚 Available Courses</h2>

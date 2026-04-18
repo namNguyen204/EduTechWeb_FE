@@ -17,6 +17,7 @@ import SubjectDetailPage from "../../pages/SubjectDetailPage.tsx";
 import SubjectCreatePage from "../../pages/SubjectCreatePage.tsx";
 import CourseCreatePage from "../../pages/CourseCreatePage.tsx";
 import { CourseDetailPage } from "../../pages/CourseDetailPage.tsx";
+import { CourseEditPage } from "../../pages/CourseEditPage.tsx";
 import TeacherArenaPage from "../../pages/TeacherArenaPage.tsx";
 import TeacherSubjectPage from "../../pages/TeacherSubjectPage.tsx";
 import TeacherCoursesPage from "../../pages/TeacherCoursesPage.tsx";
@@ -115,6 +116,11 @@ const ProtectedCourseCreate = withProtectedRoute(CourseCreatePage, {
   allowedRoles: ["TEACHER"],
 });
 
+// Protected course edit page
+const ProtectedCourseEdit = withProtectedRoute(CourseEditPage, {
+  allowedRoles: ["TEACHER"],
+});
+
 // Protected components for parent
 const ProtectedParentPortal = withProtectedRoute(ParentPortalPage, {
   allowedRoles: ["PARENT"],
@@ -208,7 +214,7 @@ export const pageRegistry: Record<string, RouteEntry> = {
   "/teacher/courses": workspaceRoute(ProtectedCoursesList),
   "/teacher/courses/create": workspaceRoute(ProtectedCourseCreate),
   "/teacher/courses/:courseId": workspaceRoute(ProtectedCourseDetail),
-  "/teacher/courses/:courseId/edit": workspaceRoute(ProtectedCourseDetail),
+  "/teacher/courses/:courseId/edit": workspaceRoute(ProtectedCourseEdit),
   "/teacher/onboarding": workspaceRoute(ProtectedTeacherOnboarding),
   "/teacher/arena": workspaceRoute(ProtectedTeacherArena),
   "/teacher/leaderboard": workspaceRoute(ProtectedTeacherLeaderboard),

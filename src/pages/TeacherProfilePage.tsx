@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { getAppLanguage, setAppLanguage } from "../utils/language";
 import "../styles/pages/TeacherProfilePage.scss";
 
+import { logout } from "../services";
+
 function TeacherProfilePage(): JSX.Element {
   const [avatarPreview, setAvatarPreview] = useState("");
   const [language, setLanguage] = useState(getAppLanguage());
@@ -116,6 +118,13 @@ function TeacherProfilePage(): JSX.Element {
                 )}
               </div>
             </a>
+            <button 
+              className="btn btn-muted"
+              onClick={() => logout()}
+              style={{ marginLeft: "0.5rem" }}
+            >
+              🚪 Logout
+            </button>
           </div>
         </header>
 

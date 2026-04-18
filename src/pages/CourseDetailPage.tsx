@@ -103,17 +103,28 @@ export function CourseDetailPage(): JSX.Element {
         return;
       }
 
+      if (editingChapter.title.trim().length < 5) {
+        setFormError("Chapter title must be at least 5 characters");
+        return;
+      }
+
+      if (!editingChapter.description.trim()) {
+        setFormError("Chapter description is required");
+        return;
+      }
+
       if (editingChapter.__isNew) {
-        // Create new chapter - would need API endpoint
-        console.log("Create chapter:", editingChapter);
-        // TODO: Implement create chapter API call
-        const newChapter: Chapter = {
-          ...editingChapter,
-          id: `ch_${Date.now()}`, // Temporary ID
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        setChapters([...chapters, newChapter]);
+        // Create new chapter via API
+        await coursesService.createChapter({
+          courseId: editingChapter.courseId,
+          title: editingChapter.title,
+          description: editingChapter.description,
+          orderIndex: editingChapter.orderIndex,
+        });
+
+        // Reload chapters from API
+        const response = await coursesService.getChaptersByCourse(editingChapter.courseId);
+        setChapters(response.data);
       } else {
         // Update existing chapter
         await coursesService.updateChapter(editingChapter.id, {
@@ -239,7 +250,16 @@ export function CourseDetailPage(): JSX.Element {
           </div>
 
           <div className="course-header-actions">
-            <button className="btn btn-primary" onClick={() => window.history.back()}>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => {
+                if (course?.subjectId) {
+                  window.location.href = `/teacher/courses?subjectId=${course.subjectId}`;
+                } else {
+                  window.history.back();
+                }
+              }}
+            >
               ← Back
             </button>
             <button className="btn btn-secondary">✏️ Edit Course</button>
@@ -362,21 +382,6 @@ export function CourseDetailPage(): JSX.Element {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={editingChapter.isPublished}
-                        onChange={(e) =>
-                          setEditingChapter({
-                            ...editingChapter,
-                            isPublished: e.target.checked,
-                          })
-                        }
-                      />
-                      Publish this chapter
-                    </label>
-                  </div>
                 </form>
               </div>
 

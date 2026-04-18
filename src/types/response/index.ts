@@ -20,4 +20,8 @@ export type {
   ChaptersListResponse,
   ChapterUpdateRequest,
   ChapterUpdateResponse,
+  CreateChapterRequest,
+  CreateChapterResponse,
+  UpdateCourseRequest,
+  UpdateCourseResponse,
 } from "./subjects";
