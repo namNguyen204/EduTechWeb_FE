@@ -125,3 +125,33 @@ export interface ChapterUpdateResponse {
   message: string;
   statusCode: number;
 }
+
+export interface CreateChapterRequest {
+  courseId: string;
+  title: string;
+  description: string;
+  orderIndex: number;
+}
+
+export interface CreateChapterResponse {
+  success: boolean;
+  data: Chapter;
+  message: string;
+  statusCode: number;
+}
+
+export interface UpdateCourseRequest {
+  title: string;
+  description: string;
+  thumbnailUrl?: {
+    publicId: string;
+    url: string;
+  };
+}
+
+export interface UpdateCourseResponse {
+  success: boolean;
+  data: Course;
+  message: string;
+  statusCode: number;
+}

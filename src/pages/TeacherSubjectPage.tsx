@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import React from "react";
-import { subjectsService } from "../services";
+import { subjectsService, logout } from "../services";
 import { SubjectsTable } from "../components/teacher/SubjectsTable";
 import type { Subject } from "../types/response";
 import "../styles/pages/TeacherCoursePage.scss";
@@ -124,6 +124,13 @@ function TeacherSubjectPage(): JSX.Element {
               </div>
               <div className="avatar">🧑</div>
             </a>
+            <button 
+              className="btn btn-muted"
+              onClick={() => logout()}
+              style={{ marginLeft: "0.5rem" }}
+            >
+              🚪 Logout
+            </button>
           </div>
         </header>
 

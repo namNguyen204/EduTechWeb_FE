@@ -2,6 +2,8 @@ import type { JSX } from "react";
 
 import "../styles/pages/TeacherLeaderboardPage.scss";
 
+import { logout } from "../services";
+
 const ranks = [
   {
     rank: "#4",
@@ -101,6 +103,13 @@ function TeacherLeaderboardPage(): JSX.Element {
               </div>
               <div className="avatar">🧑</div>
             </a>
+            <button 
+              className="btn btn-muted"
+              onClick={() => logout()}
+              style={{ marginLeft: "0.5rem" }}
+            >
+              🚪 Logout
+            </button>
           </div>
         </header>
 

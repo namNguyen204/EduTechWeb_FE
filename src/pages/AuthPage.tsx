@@ -12,7 +12,6 @@ function AuthPage(): JSX.Element {
   const [activeTab, setActiveTab] = React.useState(
     tabParam === "signup" ? "signup" : "login",
   );
-  const [role, setRole] = React.useState("student");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [fullName, setFullName] = React.useState("");
@@ -119,25 +118,6 @@ function AuthPage(): JSX.Element {
               ? "Access your personalized AI-powered educational dashboard."
               : "Create your account and start your learning journey today."}
           </p>
-
-          {activeTab === "login" && (
-            <div className="auth-role-selector">
-              <button
-                type="button"
-                className={`auth-role-option ${role === "student" ? "active" : ""}`}
-                onClick={() => setRole("student")}
-              >
-                👨‍🎓 Student
-              </button>
-              <button
-                type="button"
-                className={`auth-role-option ${role === "teacher" ? "active" : ""}`}
-                onClick={() => setRole("teacher")}
-              >
-                👨‍🏫 Teacher
-              </button>
-            </div>
-          )}
 
           <div className="auth-tabs">
             <button

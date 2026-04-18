@@ -1,55 +1,61 @@
 import React, { useState, useEffect, JSX } from "react";
 import { coursesService } from "../services";
 import { uploadsService } from "../services";
-import { gradeLevelsService } from "../services/grade-levels.service";
-import type { GradeLevel } from "../services/grade-levels.service";
+import type { Course } from "../types/response";
 import "../styles/pages/TeacherCoursePage.scss";
 
-const getQueryParam = (key: string): string => {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(key) || "";
-};
+export function CourseEditPage(): JSX.Element {
+  // Extract courseId from pathname
+  const courseId = window.location.pathname.split("/")[3];
 
-export function CourseCreatePage(): JSX.Element {
+  const [course, setCourse] = useState<Course | null>(null);
   const [formData, setFormData] = useState({
-    subjectId: getQueryParam("subjectId"),
     title: "",
     description: "",
-    gradeLevelId: "",
-    type: "Free" as "Free" | "Premium",
-    subfolder: "courses",
   });
 
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const [gradeLevels, setGradeLevels] = useState<GradeLevel[]>([]);
-  const [isLoadingData, setIsLoadingData] = useState(true);
-
-  // Load grade levels on mount
+  // Load course details
   useEffect(() => {
-    const loadGradeLevels = async () => {
+    const loadCourse = async () => {
+      if (!courseId) {
+        setError("Course ID not found");
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        setIsLoadingData(true);
-        const gradeLevelsData = await gradeLevelsService.getAll();
-        setGradeLevels(gradeLevelsData);
+        setIsLoading(true);
+        const data = await coursesService.getCourseById(courseId);
+        setCourse(data);
+        setFormData({
+          title: data.title,
+          description: data.description,
+        });
+        // Set thumbnail preview from course
+        if (data.thumbnail && typeof data.thumbnail === "object" && "url" in data.thumbnail) {
+          setThumbnailPreview(data.thumbnail.url);
+        }
+        setError(null);
       } catch (err) {
-        console.error("Failed to load grade levels:", err);
+        const message = err instanceof Error ? err.message : "Failed to load course";
+        setError(message);
       } finally {
-        setIsLoadingData(false);
+        setIsLoading(false);
       }
     };
 
-    loadGradeLevels();
-  }, []);
+    loadCourse();
+  }, [courseId]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -75,22 +81,17 @@ export function CourseCreatePage(): JSX.Element {
     e.preventDefault();
 
     try {
-      setIsLoading(true);
+      setIsSaving(true);
       setError(null);
 
       // Validate form
-      if (!formData.subjectId.trim()) {
-        setError("Subject is required");
-        return;
-      }
-
       if (!formData.title.trim()) {
         setError("Course title is required");
         return;
       }
 
-      if (formData.description.trim().length < 10) {
-        setError("Course description must be at least 10 characters");
+      if (formData.title.trim().length < 10) {
+        setError("Course title must be at least 10 characters");
         return;
       }
 
@@ -99,59 +100,42 @@ export function CourseCreatePage(): JSX.Element {
         return;
       }
 
-      if (!formData.gradeLevelId.trim()) {
-        setError("Grade level is required");
-        return;
-      }
-
-      if (!thumbnailFile) {
-        setError("Thumbnail image is required");
-        return;
-      }
-
-      // Step 1: Upload thumbnail file
-      const uploadedThumbnail = await uploadsService.uploadFile(
-        thumbnailFile,
-        formData.subfolder,
-      );
-
-      // Step 2: Create course with uploaded file data
-      await coursesService.create({
-        subjectId: formData.subjectId,
+      let updateData: any = {
         title: formData.title,
         description: formData.description,
-        gradeLevelId: formData.gradeLevelId,
-        thumbnailPublicId: uploadedThumbnail.publicId,
-        thumbnailUrl: uploadedThumbnail.url,
-        type: formData.type || "Free",
-      });
+      };
+
+      // If user selected a new thumbnail, upload it
+      if (thumbnailFile) {
+        const uploadedThumbnail = await uploadsService.uploadFile(
+          thumbnailFile,
+          "courses",
+        );
+        updateData.thumbnailUrl = {
+          publicId: uploadedThumbnail.publicId,
+          url: uploadedThumbnail.url,
+        };
+      }
+
+      // Update course
+      await coursesService.update(courseId, updateData);
 
       setSuccess(true);
-      setFormData({
-        subjectId: getQueryParam("subjectId"),
-        title: "",
-        description: "",
-        gradeLevelId: "",
-        type: "Free",
-        subfolder: "courses",
-      });
-      setThumbnailFile(null);
-      setThumbnailPreview("");
 
       // Redirect after 2 seconds
       setTimeout(() => {
-        window.location.href = "/teacher/courses?subjectId=" + formData.subjectId;
+        window.location.href = `/teacher/courses/${courseId}`;
       }, 2000);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to create course";
+      const message = err instanceof Error ? err.message : "Failed to update course";
       setError(message);
-      console.error("Create course error:", err);
+      console.error("Update course error:", err);
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
-  if (isLoadingData) {
+  if (isLoading) {
     return (
       <div className="lp-page scanner-page">
         <div className="sidebar-overlay"></div>
@@ -205,12 +189,12 @@ export function CourseCreatePage(): JSX.Element {
       <main className="lp-main">
         <header className="lp-topbar">
           <div className="lp-topbar-left">
-            <a href={`/teacher/courses/${formData.subjectId}`} className="back-btn">
-              ← Back to Courses
+            <a href={`/teacher/courses/${courseId}`} className="back-btn">
+              ← Back to Course
             </a>
           </div>
           <div className="lp-topbar-center">
-            <h1>Create New Course</h1>
+            <h1>Edit Course</h1>
           </div>
           <div className="lp-actions">
             <span>🔔</span>
@@ -219,7 +203,7 @@ export function CourseCreatePage(): JSX.Element {
 
         <section className="course-main">
           <div className="course-breadcrumb">
-            Courses &gt; Create Course
+            Courses &gt; Edit Course
           </div>
 
           <div className="subjects-container">
@@ -232,43 +216,11 @@ export function CourseCreatePage(): JSX.Element {
 
               {success && (
                 <div className="alert alert-success">
-                  <p>✅ Course created successfully! Redirecting...</p>
+                  <p>✅ Course updated successfully! Redirecting...</p>
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="create-form">
-                <div className="form-group">
-                  <label htmlFor="subjectId">Subject ID *</label>
-                  <input
-                    type="text"
-                    id="subjectId"
-                    name="subjectId"
-                    value={formData.subjectId}
-                    disabled
-                    className="form-control"
-                    style={{ backgroundColor: "#f5f5f5", cursor: "not-allowed" }}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="gradeLevelId">Grade Level *</label>
-                  <select
-                    id="gradeLevelId"
-                    name="gradeLevelId"
-                    value={formData.gradeLevelId}
-                    onChange={handleInputChange}
-                    disabled={isLoading}
-                    className="form-control"
-                  >
-                    <option value="">Select Grade Level</option>
-                    {gradeLevels.map((level) => (
-                      <option key={level.id} value={level.id}>
-                        {level.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 <div className="form-group">
                   <label htmlFor="title">Course Title *</label>
                   <input
@@ -278,7 +230,7 @@ export function CourseCreatePage(): JSX.Element {
                     value={formData.title}
                     onChange={handleInputChange}
                     placeholder="Enter course title"
-                    disabled={isLoading}
+                    disabled={isSaving}
                     className="form-control"
                   />
                 </div>
@@ -291,45 +243,14 @@ export function CourseCreatePage(): JSX.Element {
                     value={formData.description}
                     onChange={handleInputChange}
                     placeholder="Enter course description"
-                    disabled={isLoading}
+                    disabled={isSaving}
                     className="form-control"
                     rows={5}
                   />
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="type">Course Type</label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleInputChange}
-                      disabled={isLoading}
-                      className="form-control"
-                    >
-                      <option value="Free">Free</option>
-                      <option value="Premium">Premium</option>
-                    </select>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="subfolder">Upload Subfolder *</label>
-                    <input
-                      type="text"
-                      id="subfolder"
-                      name="subfolder"
-                      value={formData.subfolder}
-                      onChange={handleInputChange}
-                      placeholder="e.g., courses, courses/math"
-                      disabled={isLoading}
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-
                 <div className="form-group">
-                  <label htmlFor="thumbnail">Course Thumbnail *</label>
+                  <label htmlFor="thumbnail">Course Thumbnail (Optional)</label>
                   <div className="file-upload-wrapper">
                     {thumbnailPreview && (
                       <div className="preview">
@@ -341,13 +262,13 @@ export function CourseCreatePage(): JSX.Element {
                       id="thumbnail"
                       accept="image/*"
                       onChange={handleFileChange}
-                      disabled={isLoading}
+                      disabled={isSaving}
                       className="file-input"
                     />
                     <label htmlFor="thumbnail" className="file-label">
                       {thumbnailFile
                         ? `✓ ${thumbnailFile.name}`
-                        : "Choose Thumbnail"}
+                        : "Change Thumbnail"}
                     </label>
                   </div>
                 </div>
@@ -355,12 +276,12 @@ export function CourseCreatePage(): JSX.Element {
                 <div className="form-actions">
                   <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isSaving}
                     className="btn btn-primary"
                   >
-                    {isLoading ? "Creating..." : "Create Course"}
+                    {isSaving ? "Saving..." : "Save Changes"}
                   </button>
-                  <a href={`/teacher/courses?subjectId=${formData.subjectId}`} className="btn btn-secondary">
+                  <a href={`/teacher/courses/${courseId}`} className="btn btn-secondary">
                     Cancel
                   </a>
                 </div>
@@ -373,4 +294,4 @@ export function CourseCreatePage(): JSX.Element {
   );
 }
 
-export default CourseCreatePage;
+export default CourseEditPage;

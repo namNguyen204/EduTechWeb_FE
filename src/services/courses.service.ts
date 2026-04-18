@@ -6,6 +6,10 @@ import type {
   ChaptersListResponse,
   ChapterUpdateResponse,
   ChapterUpdateRequest,
+  CreateChapterRequest,
+  CreateChapterResponse,
+  UpdateCourseRequest,
+  UpdateCourseResponse,
 } from "../types/response";
 
 interface CoursesFilterParams {
@@ -31,11 +35,10 @@ export interface CreateCourseRequest {
   subjectId: string;
   title: string;
   description: string;
-  gradeLevel: string;
+  gradeLevelId: string;
   thumbnailPublicId: string;
   thumbnailUrl: string;
-  type?: "free" | "premium";
-  status?: "draft" | "published" | "archived";
+  type?: "Free" | "Premium";
 }
 
 export interface CreateCourseResponse {
@@ -49,7 +52,9 @@ const COURSES_ENDPOINTS = {
   myCourses: "/courses/my-courses",
   list: "/courses",
   detail: (id: string) => `/courses/${id}`,
+  update: (id: string) => `/courses/${id}`,
   chapters: "/chapters",
+  createChapter: "/chapters",
   updateChapter: (id: string) => `/chapters/${id}`,
   create: "/courses",
 } as const;
@@ -103,14 +108,22 @@ export const coursesService = {
         subjectId: data.subjectId,
         title: data.title,
         description: data.description,
-        gradeLevel: data.gradeLevel,
-        thumbnail: {
+        gradeLevelId: data.gradeLevelId,
+        thumbnailUrl: {
           publicId: data.thumbnailPublicId,
           url: data.thumbnailUrl,
         },
-        type: data.type || "free",
-        status: data.status || "draft",
+        type: data.type,
       },
+    );
+
+    return response.data;
+  },
+
+  async update(id: string, data: UpdateCourseRequest): Promise<Course> {
+    const response = await apiClient.put<UpdateCourseResponse>(
+      COURSES_ENDPOINTS.update(id),
+      data,
     );
 
     return response.data;
@@ -137,6 +150,13 @@ export const coursesService = {
     );
 
     return response.data;
+  },
+
+  async createChapter(data: CreateChapterRequest): Promise<void> {
+    await apiClient.post<CreateChapterResponse>(
+      COURSES_ENDPOINTS.createChapter,
+      data,
+    );
   },
 
   async getChaptersByCourse(courseId: string) {

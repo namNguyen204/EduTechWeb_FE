@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 
+import { logout } from "../services";
 import "../styles/pages/TeacherLearningPathPage.scss";
 
 function TeacherLearningPathPage(): JSX.Element {
@@ -62,6 +63,13 @@ function TeacherLearningPathPage(): JSX.Element {
               </div>
               <div className="avatar">🧑</div>
             </a>
+            <button 
+              className="btn btn-muted"
+              onClick={() => logout()}
+              style={{ marginLeft: "0.5rem" }}
+            >
+              🚪 Logout
+            </button>
           </div>
         </header>
 
