@@ -1,6 +1,9 @@
 import type { JSX } from "react";
 
 import React from "react";
+import { authService } from "../services/auth.service";
+import { setUserSession, setAccessToken } from "../core/http";
+import type { LoginRequest } from "../types/request";
 import "../styles/pages/AuthPage.scss";
 
 function AuthPage(): JSX.Element {
@@ -10,6 +13,73 @@ function AuthPage(): JSX.Element {
     tabParam === "signup" ? "signup" : "login",
   );
   const [role, setRole] = React.useState("student");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const loginPayload: LoginRequest = {
+        email,
+        password,
+      };
+
+      const response = await authService.login(loginPayload);
+
+      // Save access token
+      setAccessToken(response.accessToken);
+
+      // Prepare user session with email as fullName fallback
+      const userSession = {
+        userId: response.user.id,
+        email: response.user.email,
+        role: response.user.role,
+        fullName: response.user.fullName || response.user.email,
+        avatarUrl: response.user.avatarUrl,
+      };
+
+      // Save user session
+      setUserSession(userSession);
+
+      // Redirect based on role
+      const redirectPath =
+        response.user.role === "TEACHER" ? "/teacher/home" : "/student/home";
+      window.location.href = redirectPath;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Login failed. Please try again.";
+      setError(errorMessage);
+      console.error("Login error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    // TODO: Implement signup logic when API is ready
+    setError("Sign up functionality coming soon");
+  };
 
   return (
     <div className="auth-page">
@@ -50,37 +120,47 @@ function AuthPage(): JSX.Element {
               : "Create your account and start your learning journey today."}
           </p>
 
-          <div className="auth-role-selector">
-            <button
-              type="button"
-              className={`auth-role-option ${role === "student" ? "active" : ""}`}
-              onClick={() => setRole("student")}
-            >
-              👨‍🎓 Student
-            </button>
-            <button
-              type="button"
-              className={`auth-role-option ${role === "teacher" ? "active" : ""}`}
-              onClick={() => setRole("teacher")}
-            >
-              👨‍🏫 Teacher
-            </button>
-          </div>
+          {activeTab === "login" && (
+            <div className="auth-role-selector">
+              <button
+                type="button"
+                className={`auth-role-option ${role === "student" ? "active" : ""}`}
+                onClick={() => setRole("student")}
+              >
+                👨‍🎓 Student
+              </button>
+              <button
+                type="button"
+                className={`auth-role-option ${role === "teacher" ? "active" : ""}`}
+                onClick={() => setRole("teacher")}
+              >
+                👨‍🏫 Teacher
+              </button>
+            </div>
+          )}
 
           <div className="auth-tabs">
             <button
               className={activeTab === "login" ? "active" : ""}
-              onClick={() => setActiveTab("login")}
+              onClick={() => {
+                setActiveTab("login");
+                setError("");
+              }}
             >
               Login
             </button>
             <button
               className={activeTab === "signup" ? "active" : ""}
-              onClick={() => setActiveTab("signup")}
+              onClick={() => {
+                setActiveTab("signup");
+                setError("");
+              }}
             >
               Sign Up
             </button>
           </div>
+
+          {error && <div className="auth-error">{error}</div>}
 
           <button className="social-btn">
             <span>G</span>
@@ -97,57 +177,83 @@ function AuthPage(): JSX.Element {
             <span />
           </div>
 
-          {activeTab === "signup" && (
-            <>
-              <label>Full Name</label>
-              <div className="field">
-                <i>👤</i>
-                <input type="text" placeholder="Nguyen Van A" />
-              </div>
-            </>
-          )}
+          <form onSubmit={activeTab === "login" ? handleLogin : handleSignup}>
+            {activeTab === "signup" && (
+              <>
+                <label>Full Name</label>
+                <div className="field">
+                  <i>👤</i>
+                  <input
+                    type="text"
+                    placeholder="Nguyen Van A"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
 
-          <label>Email Address</label>
-          <div className="field">
-            <i>✉</i>
-            <input type="email" placeholder="name@example.com" />
-          </div>
+            <label>Email Address</label>
+            <div className="field">
+              <i>✉</i>
+              <input
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="field-head">
-            <label>Password</label>
-            {activeTab === "login" && <a href="#">Forgot password?</a>}
-          </div>
-          <div className="field">
-            <i>🔒</i>
-            <input type="password" placeholder="••••••••" />
-            <i>◉</i>
-          </div>
+            <div className="field-head">
+              <label>Password</label>
+              {activeTab === "login" && <a href="#">Forgot password?</a>}
+            </div>
+            <div className="field">
+              <i>🔒</i>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <i>◉</i>
+            </div>
 
-          {activeTab === "signup" && (
-            <>
-              <label>Confirm Password</label>
-              <div className="field">
-                <i>🔒</i>
-                <input type="password" placeholder="••••••••" />
-                <i>◉</i>
-              </div>
-            </>
-          )}
+            {activeTab === "signup" && (
+              <>
+                <label>Confirm Password</label>
+                <div className="field">
+                  <i>🔒</i>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <i>◉</i>
+                </div>
+              </>
+            )}
 
-          <a
-            className="auth-submit"
-            href={
-              activeTab === "login"
-                ? role === "teacher"
-                  ? "/teacher/home"
-                  : "/student/home"
-                : role === "teacher"
-                  ? "/teacher/onboarding"
-                  : "/student/onboarding"
-            }
-          >
-            {activeTab === "login" ? "Log In →" : "Create Account →"}
-          </a>
+            <button
+              type="submit"
+              className="auth-submit"
+              disabled={isLoading}
+              style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? "not-allowed" : "pointer" }}
+            >
+              {isLoading ? (
+                activeTab === "login" ? "Logging in..." : "Creating Account..."
+              ) : activeTab === "login" ? (
+                "Log In →"
+              ) : (
+                "Create Account →"
+              )}
+            </button>
+          </form>
 
           <p className="auth-signup">
             {activeTab === "login" ? (
@@ -158,6 +264,7 @@ function AuthPage(): JSX.Element {
                   onClick={(e) => {
                     e.preventDefault();
                     setActiveTab("signup");
+                    setError("");
                   }}
                 >
                   Create an account
@@ -171,6 +278,7 @@ function AuthPage(): JSX.Element {
                   onClick={(e) => {
                     e.preventDefault();
                     setActiveTab("login");
+                    setError("");
                   }}
                 >
                   Log in

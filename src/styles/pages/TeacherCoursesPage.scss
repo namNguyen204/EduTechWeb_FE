@@ -1,0 +1,507 @@
+@use "sass:color";
+@use "../base/variables" as *;
+
+/* ============================================
+   TEACHER COURSES PAGE - ENHANCED
+   ============================================ */
+
+.teacher-courses-container {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  margin: 0;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-courses {
+    padding: 0;
+    background: transparent;
+    min-height: auto;
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid $color-border;
+      gap: 2rem;
+
+      .header-content {
+        flex: 1;
+
+        h1 {
+          font-size: 2.5rem;
+          color: $color-text;
+          margin: 0;
+          font-weight: 700;
+        }
+
+        .header-info {
+          color: $color-muted;
+          font-size: 0.95rem;
+          margin: 0.5rem 0 0 0;
+          font-weight: 500;
+        }
+      }
+
+      .btn {
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+
+        &.btn-primary {
+          background: $color-primary;
+          color: white;
+          border: none;
+
+          &:hover {
+            background: color.adjust($color-primary, $lightness: -10%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+          }
+        }
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+
+        .btn {
+          width: 100%;
+        }
+      }
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+
+      &.alert-danger {
+        background: #fee;
+        border-left: 4px solid #f44;
+        color: #d00;
+      }
+
+      &.alert-success {
+        background: #efe;
+        border-left: 4px solid #4f4;
+        color: #040;
+      }
+    }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+
+      .search-input {
+        flex: 1;
+        padding: 0.875rem 1rem;
+        border: 1px solid $color-border;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+
+        &:focus {
+          outline: none;
+          border-color: $color-primary;
+          box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+        }
+
+        &::placeholder {
+          color: $color-muted;
+        }
+      }
+
+      .btn {
+        padding: 0.875rem 1.5rem;
+        border: 1px solid $color-border;
+        background: white;
+        color: $color-text;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+
+        &:hover {
+          background: #f5f5f5;
+          border-color: $color-primary;
+        }
+
+        &.btn-secondary {
+          background: $color-primary;
+          color: white;
+          border-color: $color-primary;
+
+          &:hover {
+            background: color.adjust($color-primary, $lightness: -10%);
+          }
+        }
+
+        &.btn-ghost {
+          background: #fafafa;
+          border: 1px solid #ccc;
+
+          &:hover {
+            background: #f5f5f5;
+          }
+        }
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+
+    /* Filters Bar */
+    .filters-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+
+      .form-control {
+        padding: 0.875rem;
+        border: 1px solid $color-border;
+        border-radius: 8px;
+        background: white;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        color: $color-text;
+
+        &:hover {
+          border-color: $color-primary;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $color-primary;
+          box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+        }
+
+        option {
+          color: $color-text;
+        }
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      background: #f5f5f5;
+      border-radius: 8px;
+
+      .pagination-info {
+        color: $color-muted;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .btn {
+        padding: 0.625rem 1.25rem;
+        border: 1px solid $color-border;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 600;
+
+        &:hover:not(:disabled) {
+          background: $color-primary;
+          color: white;
+          border-color: $color-primary;
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  /* Detail Panel */
+  .course-detail-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.5rem;
+      border-bottom: 1px solid $color-border;
+      gap: 1rem;
+
+      h3 {
+        margin: 0;
+        color: $color-text;
+        font-size: 1.25rem;
+        font-weight: 700;
+        flex: 1;
+        word-break: break-word;
+      }
+
+      .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: $color-muted;
+        padding: 0;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+
+        &:hover {
+          background: #f5f5f5;
+          color: $color-text;
+        }
+      }
+    }
+
+    .detail-content {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex: 1;
+      max-height: calc(100vh - 200px);
+    }
+
+    .detail-thumbnail {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-info {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      label {
+        color: $color-muted;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .info-value {
+        color: $color-text;
+        font-size: 0.95rem;
+        font-weight: 500;
+        word-break: break-word;
+      }
+
+      .info-description {
+        color: $color-text;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        width: fit-content;
+
+        &.badge-success {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        &.badge-warning {
+          background: #fff3cd;
+          color: #856404;
+        }
+
+        &.badge-danger {
+          background: #f8d7da;
+          color: #721c24;
+        }
+
+        &.badge-primary {
+          background: rgba($color-primary, 0.1);
+          color: $color-primary;
+        }
+
+        &.badge-secondary {
+          background: #e2e3e5;
+          color: #383d41;
+        }
+      }
+    }
+
+    .detail-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      border-top: 1px solid $color-border;
+      background: #fafafa;
+
+      .btn {
+        padding: 0.75rem 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+
+        &.btn-block {
+          width: 100%;
+        }
+
+        &.btn-primary {
+          background: $color-primary;
+          color: white;
+
+          &:hover {
+            background: color.adjust($color-primary, $lightness: -10%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba($color-primary, 0.2);
+          }
+        }
+
+        &.btn-secondary {
+          background: #6c757d;
+          color: white;
+
+          &:hover {
+            background: color.adjust(#6c757d, $lightness: -10%);
+          }
+        }
+
+        &.btn-danger {
+          background: #dc3545;
+          color: white;
+
+          &:hover {
+            background: color.adjust(#dc3545, $lightness: -10%);
+          }
+        }
+      }
+    }
+
+    @media (max-width: 1200px) {
+      display: none;
+    }
+  }
+}
+
+/* Tables Loading/Empty States */
+.courses-table-loading,
+.courses-table-empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid $color-border;
+
+  p {
+    color: $color-muted;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .teacher-courses-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .teacher-courses-container {
+    gap: 1rem;
+
+    .teacher-courses {
+      .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+
+        h1 {
+          font-size: 1.75rem;
+        }
+
+        .btn {
+          width: 100%;
+        }
+      }
+
+      .search-bar {
+        flex-direction: column;
+
+        .search-input,
+        .btn {
+          width: 100%;
+        }
+      }
+
+      .filters-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .pagination-info {
+          width: 100%;
+          order: 3;
+        }
+      }
+    }
+  }
+}

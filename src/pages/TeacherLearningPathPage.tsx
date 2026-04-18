@@ -19,7 +19,7 @@ function TeacherLearningPathPage(): JSX.Element {
           <a href="/teacher/home" className="active">
             My Classes
           </a>
-          <a href="/teacher/course">Assignment Manager</a>
+          <a href="/teacher/subjects">Assignment Manager</a>
           <a href="/teacher/exams">Quizzes & Tests</a>
           <a href="/teacher/arena">Class Performance</a>
           <a href="/teacher/leaderboard">Analytics Dashboard</a>
@@ -51,7 +51,7 @@ function TeacherLearningPathPage(): JSX.Element {
             <div className="lp-search">Search lessons, formulas...</div>
           </div>
           <div className="lp-actions">
-            <a href="/teacher/course" className="scanner">
+            <a href="/teacher/subjects" className="scanner">
               🧠 AI Scanner
             </a>
             <span>🔔</span>
@@ -74,7 +74,7 @@ function TeacherLearningPathPage(): JSX.Element {
                 lessons with AI assistance.
               </p>
               <div className="lp-quick-actions">
-                <a href="/teacher/course">+ Create Assignment</a>
+                <a href="/teacher/subjects">+ Create Assignment</a>
                 <button className="ghost">👥 3 Active Classes</button>
               </div>
             </div>

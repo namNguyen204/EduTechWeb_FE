@@ -18,7 +18,7 @@ const studentLinks: NavLink[] = [
 
 const teacherLinks: NavLink[] = [
   { label: "Learning Path", href: "/teacher/learning-path" },
-  { label: "Course", href: "/teacher/course" },
+  { label: "Course", href: "/teacher/subjects" },
   { label: "Onboarding", href: "/teacher/onboarding" },
   { label: "Arena", href: "/teacher/arena" },
   { label: "Leaderboard", href: "/teacher/leaderboard" },
